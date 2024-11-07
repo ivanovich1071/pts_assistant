@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Чат с AI Ассистентом</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="chat-widget">
+        <div class="chat-header">
+            <span>Чат с консультантом</span>
+            <button class="close-btn" onclick="toggleChat()">✖</button>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <!-- Сообщения будут добавляться здесь JavaScript-ом -->
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="user-message" placeholder="Введите сообщение..." />
+            <button onclick="sendMessage()">Отправить</button>
+        </div>
+    </div>
+
+    <!-- Кнопка для открытия виджета чата -->
+    <button onclick="toggleChat()" id="chat-toggle-btn" style="position: fixed; bottom: 20px; right: 20px; padding: 10px 20px; background-color: #3b7a57; color: white; border: none; border-radius: 50%; cursor: pointer;">
+        💬
+    </button>
+
+    <script src="widget.js"></script>
+</body>
+</html>
