@@ -1,19 +1,18 @@
 import os
 from dotenv import load_dotenv
-import requests
+import openai
 
 
-class MistralChat:
+class OpenAIChat:
     def __init__(self):
-        # Загрузка переменных окружения
+        # Загружаем переменные окружения
         dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
         load_dotenv(dotenv_path)
 
-        # Параметры для модели и API
-        self.model = "mistral-large-latest"  # Имя модели Mistral
-        self.api_key = os.getenv("MISTRAL_API_KEY")  # API-ключ Mistral из .env
-        self.api_url = "https://api.mistral.com/generate"  # URL Mistral API (проверьте актуальность)
-        self.timeout_limit = 20  # Таймаут в секундах для ожидания ответа от модели
+        # Инициализируем параметры модели OpenAI
+        self.model = "gpt-3.5-turbo"  # Замените на нужную модель
+        self.api_key = os.getenv("OPENAI_API_KEY")
+        openai.api_key = self.api_key
 
     def load_prompt(self, filename="prompts/assistant_prompt.txt"):
         """
@@ -29,38 +28,24 @@ class MistralChat:
 
     def get_response(self, user_message):
         """
-        Отправляет сообщение пользователя в Mistral и получает ответ.
+        Отправляет сообщение пользователя в OpenAI API и получает ответ.
         """
-        headers = {
-            "Authorization": f"Bearer {self.api_key}",
-            "Content-Type": "application/json"
-        }
-
-        # Формируем полный промт с учетом начального текста и сообщения пользователя
-        prompt = self.load_prompt()
-        data = {
-            "model": self.model,
-            "prompt": prompt + "\nUser: " + user_message + "\nAssistant:",
-            "max_tokens": 150,
-            "temperature": 0.7,
-            "stop": ["User:", "Assistant:"]
-        }
+        prompt = self.load_prompt() + "\nUser: " + user_message + "\nAssistant:"
 
         try:
-            # Запрос к Mistral API с таймаутом
-            response = requests.post(self.api_url, headers=headers, json=data, timeout=self.timeout_limit)
-            response_data = response.json()
-
-            if response.status_code == 200:
-                return response_data.get("choices", [{}])[0].get("text", "").strip()
-            else:
-                print("Ошибка от Mistral API:", response_data)
-                return "Извините, возникла ошибка при обработке вашего запроса."
-        except requests.Timeout:
-            return "Извините, запрос занял слишком много времени. Пожалуйста, попробуйте снова."
-        except requests.RequestException as e:
-            print(f"Произошла ошибка: {e}")
-            return "Извините, возникла ошибка при подключении к сервису."
+            response = openai.ChatCompletion.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": prompt},
+                    {"role": "user", "content": user_message}
+                ],
+                max_tokens=150,
+                temperature=0.7
+            )
+            return response.choices[0].message['content'].strip()
+        except openai.error.OpenAIError as e:
+            print(f"Ошибка при подключении к OpenAI API: {e}")
+            return "Извините, возникла ошибка при обработке вашего запроса."
 
     def chat(self, user_message):
         """
