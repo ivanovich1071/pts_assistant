@@ -70,3 +70,15 @@
 2024-11-08 11:02:16,830 INFO: * Restarting with stat
 2024-11-08 11:02:18,549 WARNING: * Debugger is active!
 2024-11-08 11:02:18,552 INFO: * Debugger PIN: 672-686-028
+2024-11-08 11:46:40,254 INFO:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-08 11:46:40,255 INFO:[33mPress CTRL+C to quit[0m
+2024-11-08 11:46:40,257 INFO: * Restarting with stat
+2024-11-08 11:46:42,006 WARNING: * Debugger is active!
+2024-11-08 11:46:42,010 INFO: * Debugger PIN: 672-686-028
+2024-11-08 20:37:32,969 INFO:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-08 20:37:32,970 INFO:[33mPress CTRL+C to quit[0m
+2024-11-08 20:37:32,972 INFO: * Restarting with stat
+2024-11-08 20:37:34,483 WARNING: * Debugger is active!
+2024-11-08 20:37:34,486 INFO: * Debugger PIN: 672-686-028
