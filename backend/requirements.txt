@@ -5,3 +5,4 @@ gspread==5.1.1                   # Для работы с Google Sheets
 oauth2client==4.1.3              # Для авторизации в Google Sheets
 mistralai                        # Клиент Mistral AI (установите командой ниже)
 python-telegram-bot==13.7        # Для взаимодействия с Telegram API
+Werkzeug==2.0.3
