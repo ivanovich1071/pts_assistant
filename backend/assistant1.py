@@ -1,54 +1,54 @@
 import os
+import requests
 from dotenv import load_dotenv
-import openai
 
-class OpenAIChat:
+class YandexAssistant:
     def __init__(self):
-        # Загружаем переменные окружения из файла .env
+        # Загрузка переменных окружения из .env файла
         dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
         load_dotenv(dotenv_path)
 
-        # Получаем ключ API
-        self.api_key = os.getenv("OPENAI_API_KEY")
+        # Получение API-ключа
+        self.api_key = os.getenv("YANDEX_API_KEY")
         if not self.api_key:
-            raise ValueError("OpenAI API Key not found. Please set it in the .env file.")
+            raise ValueError("Yandex API Key not found. Please set it in the .env file.")
 
-        # Устанавливаем ключ API для openai
-        openai.api_key = self.api_key
-        self.model = "text-davinci-003"  # Замените на доступную модель, например, text-davinci-003
+        # URL для API
+        self.api_url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
+        self.headers = {
+            "Authorization": f"Api-Key {self.api_key}",
+            "Content-Type": "application/json",
+        }
 
-    def chat(self, message):
+    def chat(self, prompt, temperature=0.7, max_tokens=200):
+        """
+        Отправляет запрос к Yandex Foundation Models для генерации текста.
+
+        :param prompt: Строка с текстом запроса от пользователя
+        :param temperature: Параметр креативности ответа (по умолчанию 0.7)
+        :param max_tokens: Максимальное количество токенов в ответе (по умолчанию 200)
+        :return: Сгенерированный текст ответа
+        """
+        data = {
+            "modelUri": "gpt://yandexgpt/latest",  # Указание конкретной модели Яндекса
+            "completionOptions": {
+                "temperature": temperature,
+                "maxTokens": max_tokens,
+                "topP": 0.95
+            },
+            "messages": [
+                {"role": "system", "text": "You are a helpful assistant."},
+                {"role": "user", "text": prompt}
+            ]
+        }
+
         try:
-            # Используем Completion.create для стандартного текста
-            response = openai.Completion.create(
-                model=self.model,
-                prompt=message,
-                max_tokens=100
-            )
-            # Возвращаем текст из ответа
-            return response.choices[0].text.strip() if response.choices else None
-        except Exception as e:
-            print("Ошибка при обращении к OpenAI API:", e)
-            return None
-
-# Функция для тестирования взаимодействия с OpenAI API
-def test_openai_chat():
-    # Создаем экземпляр OpenAIChat
-    chat_assistant = OpenAIChat()
-
-    # Пробное сообщение
-    test_message = "Привет! Как тебя зовут?"
-
-    # Получаем ответ от API
-    response = chat_assistant.chat(test_message)
-
-    # Выводим ответ или сообщение об ошибке
-    if response:
-        print("Ответ от OpenAI API:")
-        print(response)
-    else:
-        print("Не удалось получить ответ от OpenAI API.")
-
-# Запуск теста при запуске файла напрямую
-if __name__ == "__main__":
-    test_openai_chat()
+            print("Отправляемые данные:", data)  # Отладочное сообщение
+            response = requests.post(self.api_url, headers=self.headers, json=data)
+            response.raise_for_status()  # Проверка на успешность запроса
+            result = response.json()
+            print("Ответ API:", result)  # Отладочное сообщение
+            return result.get("result", {}).get("alternatives", [{}])[0].get("message", {}).get("text", "Нет текста в ответе")
+        except requests.exceptions.RequestException as e:
+            print(f"Ошибка при запросе к API Яндекса: {e}")
+            return "Извините, произошла ошибка при обработке запроса."
