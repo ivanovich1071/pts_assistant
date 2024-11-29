@@ -2,6 +2,8 @@ import os
 import requests
 from dotenv import load_dotenv
 
+
+
 class YandexAssistant:
     def __init__(self):
         # Загрузка переменных окружения из .env файла
@@ -20,11 +22,29 @@ class YandexAssistant:
             "Content-Type": "application/json",
         }
 
-    def chat(self, prompt, temperature=0.7, max_tokens=200):
+        # Загрузка системного промпта из файла
+        self.system_prompt = self.load_system_prompt()
+
+    def load_system_prompt(self):
+        """
+        Загружает системный промпт из файла prompts/assistant_prompt.txt.
+        Если файл отсутствует, создаёт его с базовым содержимым.
+        """
+        prompt_path = os.path.join(os.path.dirname(__file__), "prompts", "assistant_prompt.txt")
+        if not os.path.exists(prompt_path):
+            default_prompt = "You are a helpful assistant. Your role is to assist users with detailed and accurate responses."
+            os.makedirs(os.path.dirname(prompt_path), exist_ok=True)
+            with open(prompt_path, "w", encoding="utf-8") as file:
+                file.write(default_prompt)
+            print(f"Файл {prompt_path} создан с содержимым по умолчанию.")
+        with open(prompt_path, "r", encoding="utf-8") as file:
+            return file.read().strip()
+
+    def chat(self, user_prompt, temperature=0.2, max_tokens=400):
         """
         Отправляет запрос к Yandex Foundation Models для генерации текста.
 
-        :param prompt: Строка с текстом запроса от пользователя
+        :param user_prompt: Строка с текстом запроса от пользователя
         :param temperature: Параметр креативности ответа (по умолчанию 0.7)
         :param max_tokens: Максимальное количество токенов в ответе (по умолчанию 200)
         :return: Сгенерированный текст ответа
@@ -37,8 +57,8 @@ class YandexAssistant:
                 "topP": 0.95
             },
             "messages": [
-                {"role": "system", "text": "You are a helpful assistant."},
-                {"role": "user", "text": prompt}
+                {"role": "system", "text": self.system_prompt},
+                {"role": "user", "text": user_prompt}
             ]
         }
 

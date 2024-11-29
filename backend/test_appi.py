@@ -1,8 +1,12 @@
 import requests
+import os
+import requests
+from dotenv import load_dotenv
 
-# Ваш API-ключ
-api_key = "AQVNyvlvd2t_TDOmVE8SeAu1Qv0h5zgCyjYobzc3"
 
+dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
+load_dotenv(dotenv_path)
+api_key = os.getenv("YANDEX_API_KEY")
 # URL для тестового запроса
 api_url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
 
