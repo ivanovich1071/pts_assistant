@@ -300,3 +300,39 @@
 2024-11-29 21:38:21,490 DEBUG:https://llm.api.cloud.yandex.net:443 "POST /foundationModels/v1/completion HTTP/11" 400 None
 2024-11-29 21:38:21,491 DEBUG:Ответ от ассистента: Извините, произошла ошибка при обработке запроса.
 2024-11-29 21:38:21,491 INFO:127.0.0.1 - - [29/Nov/2024 21:38:21] "POST /chat HTTP/1.1" 200 -
+2024-11-30 08:57:13,718 INFO:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-11-30 08:57:13,719 INFO:[33mPress CTRL+C to quit[0m
+2024-11-30 08:57:13,721 INFO: * Restarting with stat
+2024-11-30 08:57:14,938 WARNING: * Debugger is active!
+2024-11-30 08:57:14,943 INFO: * Debugger PIN: 672-686-028
+2024-11-30 08:57:40,041 INFO:127.0.0.1 - - [30/Nov/2024 08:57:40] "OPTIONS /chat HTTP/1.1" 200 -
+2024-11-30 08:57:40,046 DEBUG:Получено сообщение от пользователя: привет
+2024-11-30 08:57:40,050 DEBUG:Starting new HTTPS connection (1): llm.api.cloud.yandex.net:443
+2024-11-30 08:57:40,390 DEBUG:https://llm.api.cloud.yandex.net:443 "POST /foundationModels/v1/completion HTTP/11" 400 None
+2024-11-30 08:57:40,393 DEBUG:Ответ от ассистента: Извините, произошла ошибка при обработке запроса.
+2024-11-30 08:57:40,394 INFO:127.0.0.1 - - [30/Nov/2024 08:57:40] "POST /chat HTTP/1.1" 200 -
+2024-12-14 12:28:10,718 INFO:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-12-14 12:28:10,718 INFO:[33mPress CTRL+C to quit[0m
+2024-12-14 12:28:10,721 INFO: * Restarting with stat
+2024-12-14 12:28:11,834 WARNING: * Debugger is active!
+2024-12-14 12:28:11,837 INFO: * Debugger PIN: 672-686-028
+2024-12-14 12:28:44,686 INFO:127.0.0.1 - - [14/Dec/2024 12:28:44] "OPTIONS /chat HTTP/1.1" 200 -
+2024-12-14 12:28:44,690 DEBUG:Получено сообщение от пользователя: привет
+2024-12-14 12:28:44,695 DEBUG:Starting new HTTPS connection (1): llm.api.cloud.yandex.net:443
+2024-12-14 12:28:45,062 DEBUG:https://llm.api.cloud.yandex.net:443 "POST /foundationModels/v1/completion HTTP/11" 400 None
+2024-12-14 12:28:45,063 DEBUG:Ответ от ассистента: Извините, произошла ошибка при обработке запроса.
+2024-12-14 12:28:45,064 INFO:127.0.0.1 - - [14/Dec/2024 12:28:45] "POST /chat HTTP/1.1" 200 -
+2024-12-14 14:57:17,653 INFO:[31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2024-12-14 14:57:17,654 INFO:[33mPress CTRL+C to quit[0m
+2024-12-14 14:57:17,656 INFO: * Restarting with stat
+2024-12-14 14:57:18,734 WARNING: * Debugger is active!
+2024-12-14 14:57:18,740 INFO: * Debugger PIN: 672-686-028
+2024-12-14 14:57:59,314 INFO:127.0.0.1 - - [14/Dec/2024 14:57:59] "OPTIONS /chat HTTP/1.1" 200 -
+2024-12-14 14:57:59,319 DEBUG:Получено сообщение от пользователя: привет
+2024-12-14 14:57:59,323 DEBUG:Starting new HTTPS connection (1): llm.api.cloud.yandex.net:443
+2024-12-14 14:57:59,568 DEBUG:https://llm.api.cloud.yandex.net:443 "POST /foundationModels/v1/completion HTTP/11" 400 None
+2024-12-14 14:57:59,570 DEBUG:Ответ от ассистента: Извините, произошла ошибка при обработке запроса.
+2024-12-14 14:57:59,571 INFO:127.0.0.1 - - [14/Dec/2024 14:57:59] "POST /chat HTTP/1.1" 200 -
