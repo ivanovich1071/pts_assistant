@@ -50,7 +50,7 @@ class YandexAssistant:
         :return: Сгенерированный текст ответа
         """
         data = {
-            "modelUri": "gpt:/b1g0mgit402vntu95jrd/yandexgpt-latest",  # Указание конкретной модели Яндекса
+            "modelUri": "gpt:/ajecn2hpho1u8ghdnrsf/yandex-lite",  # Указание конкретной модели Яндекса
             "completionOptions": {
                 "temperature": temperature,
                 "maxTokens": max_tokens,
