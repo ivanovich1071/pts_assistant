@@ -2,61 +2,80 @@ import os
 import requests
 from dotenv import load_dotenv
 
-# Загрузка .env файла
-dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
-load_dotenv(dotenv_path)
 
-# Переменные из .env
-oauth_token = os.getenv("YANDEX_OAUTH_TOKEN")  # Чтение OAuth-токена из .env
+class YandexAssistant:
+    def __init__(self):
+        # Загрузка переменных окружения из .env файла
+        dotenv_path = os.path.join(os.path.dirname(__file__), ".env")
+        load_dotenv(dotenv_path)
 
-# URL для получения IAM-токена
-iam_url = "https://iam.api.cloud.yandex.net/iam/v1/tokens"
+        # Получение IAM-токена
+        self.iam_token = os.getenv("YANDEX_IAM_TOKEN")
+        if not self.iam_token:
+            raise ValueError("IAM-токен не найден в .env файле. Укажите YANDEX_IAM_TOKEN.")
 
-# Путь к файлу для сохранения IAM-токена
-file_path = os.path.join(os.path.expanduser("~"), "iam_token.txt")
+        # URL для API
+        self.api_url = "https://llm.api.cloud.yandex.net/foundationModels/v1/completion"
+        self.headers = {
+            "Authorization": f"Bearer {self.iam_token}",
+            "Content-Type": "application/json",
+        }
 
-# Функция для получения IAM-токена
-def get_iam_token(oauth_token):
-    try:
-        # Проверка наличия OAuth-токена
-        if not oauth_token:
-            raise ValueError("OAuth-токен отсутствует. Укажите действительный OAuth-токен.")
+        # Загрузка системного промпта из файла
+        self.system_prompt = self.load_system_prompt()
 
-        # Заголовки и тело запроса
-        headers = {"Content-Type": "application/json"}
-        data = {"yandexPassportOauthToken": oauth_token}
+    def load_system_prompt(self):
+        """
+        Загружает системный промпт из файла prompts/assistant_prompt.txt.
+        Если файл отсутствует, создаёт его с базовым содержимым.
+        """
+        prompt_path = os.path.join(os.path.dirname(__file__), "prompts", "assistant_prompt.txt")
+        if not os.path.exists(prompt_path):
+            default_prompt = "Исправь грамматические, орфографические и пунктуационные ошибки в тексте. Сохраняй исходный порядок слов."
+            os.makedirs(os.path.dirname(prompt_path), exist_ok=True)
+            with open(prompt_path, "w", encoding="utf-8") as file:
+                file.write(default_prompt)
+            print(f"Файл {prompt_path} создан с содержимым по умолчанию.")
+        with open(prompt_path, "r", encoding="utf-8") as file:
+            return file.read().strip()
 
-        # Выполнение POST-запроса
-        response = requests.post(iam_url, headers=headers, json=data)
-        response.raise_for_status()  # Проверяем успешность запроса
+    def chat(self, user_prompt, temperature=0.2, max_tokens=100):
+        """
+        Отправляет запрос к Yandex Foundation Models для генерации текста.
 
-        # Извлечение IAM-токена из ответа
-        iam_token = response.json().get("iamToken")
-        if not iam_token:
-            raise ValueError("Не удалось извлечь IAM-токен из ответа API.")
+        :param user_prompt: Строка с текстом запроса от пользователя
+        :param temperature: Параметр креативности ответа (по умолчанию 0.2)
+        :param max_tokens: Максимальное количество токенов в ответе (по умолчанию 100)
+        :return: Сгенерированный текст ответа
+        """
+        data = {
+            "modelUri": "gpt://b1g35v6315951u23335m/yandexgpt-lite",
+            "completionOptions": {
+                "temperature": temperature,
+                "maxTokens": max_tokens,
+                "topP": 0.95
+            },
+            "messages": [
+                {"role": "system", "text": self.system_prompt},
+                {"role": "user", "text": user_prompt}
+            ]
+        }
 
-        print("IAM-токен успешно получен.")
-        return iam_token
-    except requests.exceptions.RequestException as e:
-        print(f"Ошибка при выполнении запроса: {e}")
-    except ValueError as ve:
-        print(f"Ошибка: {ve}")
-    return None
+        try:
+            print("Отправляемые данные:", data)  # Отладочное сообщение
+            response = requests.post(self.api_url, headers=self.headers, json=data)
+            response.raise_for_status()  # Проверка на успешность запроса
+            result = response.json()
+            print("Ответ API:", result)  # Отладочное сообщение
+            return result.get("result", {}).get("alternatives", [{}])[0].get("message", {}).get("text",
+                                                                                                "Нет текста в ответе")
+        except requests.exceptions.RequestException as e:
+            print(f"Ошибка при запросе к API Яндекса: {e}")
+            return "Извините, произошла ошибка при обработке запроса."
 
-# Функция для сохранения IAM-токена в файл
-def save_iam_token_to_file(iam_token, file_path):
-    try:
-        with open(file_path, "w", encoding="utf-8") as file:
-            file.write(iam_token)
-        print(f"IAM-токен успешно сохранён в файл: {file_path}")
-    except Exception as e:
-        print(f"Ошибка при сохранении IAM-токена: {e}")
 
-# Основная логика
 if __name__ == "__main__":
-    # Получение IAM-токена
-    iam_token = get_iam_token(oauth_token)
-    if iam_token:
-        save_iam_token_to_file(iam_token, file_path)
-    else:
-        print("Не удалось получить IAM-токен. Проверьте ошибки выше.")
+    assistant = YandexAssistant()
+    user_text = "Нейросети помогают человеку работать быстрее и эффективнее но опосения что искуственный интелек заменит человека - пока преждевремены."
+    response = assistant.chat(user_text)
+    print("Ответ ассистента:", response)
