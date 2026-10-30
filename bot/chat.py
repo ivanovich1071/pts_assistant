@@ -1,9 +1,12 @@
 from aiogram import Bot, Dispatcher, types
 from aiogram.utils import executor
 import os
+from dotenv import load_dotenv
 
-# Замените на ваш токен
-TELEGRAM_BOT_TOKEN = '***REMOVED_TELEGRAM_TOKEN***'
+load_dotenv()
+
+# Токен берётся из переменной окружения (см. .env.example)
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
 
 # Инициализация бота и диспетчера
 bot = Bot(token=TELEGRAM_BOT_TOKEN)

@@ -1,10 +1,14 @@
 import requests
 import time
 import base64
+import os
+from dotenv import load_dotenv
 
-# Ваш IAM-токен и Catalog ID
-iam_token = "***REMOVED_TOKEN***.U3pVNG0d7w6A4vyVOT40lOLEDLk3mbOuliM6xsvbwF_2FLWiJmt18NPSDLVgzOIZKZ5MOhAx7qg1Ib0U8N2ZAw"
-catalog_id = "b1g35v6315951u23335m"
+load_dotenv()
+
+# IAM-токен и Catalog ID берутся из переменных окружения (см. .env.example)
+iam_token = os.getenv("YANDEX_IAM_TOKEN")
+catalog_id = os.getenv("YANDEX_CATALOG_ID", "b1g35v6315951u23335m")
 
 # URL для асинхронной генерации изображения
 url = "https://llm.api.cloud.yandex.net/foundationModels/v1/imageGenerationAsync"

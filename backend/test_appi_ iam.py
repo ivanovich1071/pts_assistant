@@ -1,38 +1,17 @@
 import requests
 import datetime
 import jwt
+import json
+import os
+from dotenv import load_dotenv
 
-# Данные из ключа
-service_account_id = "***REMOVED_SA_ID***"  # ID сервисного аккаунта
-key_id = "***REMOVED_KEY_ID***"  # ID ключа
-private_key = """***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED***
-***REMOVED_PRIVATE_KEY***"""
+load_dotenv()
+
+# Данные сервисного аккаунта берутся из переменных окружения (см. .env.example).
+# Приватный ключ НИКОГДА не хранится в коде.
+service_account_id = os.getenv("YC_SERVICE_ACCOUNT_ID")
+key_id = os.getenv("YC_KEY_ID")
+private_key = os.getenv("YC_PRIVATE_KEY")
 
 # URL для получения IAM-токена
 iam_url = "https://iam.api.cloud.yandex.net/iam/v1/tokens"
